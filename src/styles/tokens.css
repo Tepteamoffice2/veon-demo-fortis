@@ -1,0 +1,84 @@
+/* Hallmark · shape: route page (one patient route told top to bottom) · genre: editorial · theme: custom · job: book · idea: "Від лікаря до руху: the page is the patient's route, the logo's teal is medicine and its orange is movement, and the page warms from teal clinic to orange movement" · vibe: "clinical calm turning into confident movement"
+ * paper: #F4F7F7 · accent: #F26A34 · display: Geologica · body: Onest · hero: typographic headline with the call button and a vertical strip of four logo facets (doctor, DAVID diagnostics, programme, fitness club) captioned with the first-visit price · nav: light sticky bar with visible anchors, the number as text and a book button; mobile phone icon, burger overlay and a bottom call bar · footer: dark deep-teal band with contacts, future sections, licence and social links, no wordmark · surface: absolute (white only for the form card, a concept colour) · imagery: client photos (one portrait series of doctors and trainers), no photo in the hero · signature: the route of logo facets, teal for medicine and orange for movement, with the first-visit price beside it
+ * axes: cool-light/sharp-grotesk/brand-orange · posture: committed · contrast: pass · fold: pass · v2.0.0 */
+/* Hallmark · pre-emit critique: P4 H4 E4 S4 R5 V4 · weakest: E, no photo of the centre or DAVID machines exists; carried the hero and the DAVID spread in type and the facet route instead of stock pictures */
+/* Hallmark · waive 7b · --color-surface #FFFFFF, used only for the form card on the orange field · the white surface is one of the approved concept colours (concept.md veon-concept colors) */
+/* Client design tokens: from design/concept.md (veon-concept: colors, fonts). One system, no second token file. */
+:root {
+  /* colour roles (concept.md §8 «Дизайн-система») */
+  --color-bg: #F4F7F7;            /* ground */
+  --color-surface: #FFFFFF;       /* form card on the orange field */
+  --color-deep: #1B2D38;          /* dark sections, text on orange */
+  --color-text: #2A4455;          /* brand dark blue, text on light */
+  --color-muted: #4E6470;         /* captions, field edges */
+  --color-medicine: #459FAD;      /* brand teal: medicine; on dark or as a fill, never as text on light */
+  --color-link: #2B7480;          /* teal for text on light */
+  --color-accent: #F26A34;        /* brand orange: movement and action */
+  --color-accent-hover: #F47E4E;  /* lighter step of the orange, keeps the deep ink above 4.5:1 */
+  --color-line: #C9D6D9;          /* decorative hairlines only */
+  --color-on-deep: #F4F7F7;       /* text on deep */
+  --color-on-deep-muted: #B5C6CC; /* secondary text on deep */
+  --color-deep-2: #233A47;        /* a step off deep for wells on the dark band */
+  --color-plate: #E6ECEE;         /* common plate under the portrait series */
+  --ring: var(--color-deep);      /* focus ring, swapped to light on dark sections */
+
+  /* fonts: self-hosted variable files (@fontsource-variable), Cyrillic subsets with і ї є ґ */
+  --font-display: "Geologica Variable", "Geologica Fallback", system-ui, sans-serif;
+  --font-body: "Onest Variable", "Onest Fallback", system-ui, sans-serif;
+
+  /* type scale desktop/mobile: 96/44 · 56/34 · 28/22 · 22/18 · 18/17 · 15/14 */
+  --fs-h1: clamp(2.75rem, 1.6rem + 4.9vw, 6rem);
+  --fs-h2: clamp(2.125rem, 1.6rem + 2.2vw, 3.5rem);
+  --fs-h3: clamp(1.375rem, 1.2rem + 0.6vw, 1.75rem);
+  --fs-lead: clamp(1.125rem, 1rem + 0.5vw, 1.375rem);
+  --fs-body: clamp(1.0625rem, 1rem + 0.15vw, 1.125rem);
+  --fs-small: clamp(0.875rem, 0.85rem + 0.1vw, 0.9375rem);
+  --fs-phone: clamp(2.5rem, 1rem + 6.6vw, 7.5rem);
+  --fs-david: clamp(5.5rem, 2rem + 13vw, 13rem);
+  --lh-h1: 0.98;
+  --lh-h2: 1.05;
+  --lh-h3: 1.2;
+  --lh-text: 1.55;
+  --sharp: "SHRP" 60;
+
+  /* rhythm 8: 8 · 16 · 24 · 40 · 64 · 104 · 160 (+ 4 and 12 for fine detail) */
+  --space-0: 0.25rem;
+  --space-1: 0.5rem;
+  --space-15: 0.75rem;
+  --space-2: 1rem;
+  --space-3: 1.5rem;
+  --space-4: 2.5rem;
+  --space-5: 4rem;
+  --space-6: 6.5rem;
+  --space-7: 10rem;
+  --section-y: var(--space-7);
+  --gutter: 1.25rem;          /* 20 at 390, 40 at 1024, 80 at 1440 */
+  --space: var(--gutter);     /* demo-base container helper */
+  --container: 1280px;
+  --header-h: 4rem;
+
+  /* facet: the slant of the strokes in the «V» mark (dx/dy of the logo strokes, about 0.586) */
+  --slant: 0.586;
+
+  --radius: 2px;
+  --ease-out: cubic-bezier(.2, .7, .2, 1);
+  --dur: 300ms;
+}
+@media (min-width: 768px) {
+  :root { --gutter: 2.5rem; --header-h: 4.5rem; }
+}
+@media (min-width: 1200px) {
+  :root { --header-h: 5rem; }
+}
+@media (min-width: 1360px) {
+  :root { --gutter: 5rem; }
+}
+@media (max-width: 767px) {
+  :root { --section-y: 4.5rem; }
+}
+
+/* metric-matched local fallbacks, so the swap to the web fonts barely moves the text */
+@font-face { font-family: "Geologica Fallback"; src: local("Arial Bold"), local("Arial-BoldMT"); font-weight: 500 900; size-adjust: 103.2%; ascent-override: 95%; descent-override: 27%; line-gap-override: 0%; }
+@font-face { font-family: "Geologica Fallback"; src: local("Arial"), local("ArialMT"); font-weight: 100 499; size-adjust: 104.3%; ascent-override: 94%; descent-override: 27%; line-gap-override: 0%; }
+@font-face { font-family: "Onest Fallback"; src: local("Arial"), local("ArialMT"); font-weight: 100 499; size-adjust: 104.3%; ascent-override: 93%; descent-override: 30%; line-gap-override: 0%; }
+@font-face { font-family: "Onest Fallback"; src: local("Arial Bold"), local("Arial-BoldMT"); font-weight: 500 900; size-adjust: 103.2%; ascent-override: 94%; descent-override: 30%; line-gap-override: 0%; }

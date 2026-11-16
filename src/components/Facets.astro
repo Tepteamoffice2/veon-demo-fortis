@@ -1,0 +1,86 @@
+---
+// Signature: the route of four facets cut on the slant of the «V» strokes.
+// variant "hero": a staircase of facets with labels (desktop) that folds into a 24px strip on phones.
+// variant "mini": four small facets on a problem tile; the steps that matter for it are filled. `labels` signs each facet (big tile, legend).
+import { steps, type StepNo } from "../data/site";
+interface Props { variant: "hero" | "mini"; active?: StepNo[]; labels?: boolean; class?: string; }
+const { variant, active = [1, 2, 3, 4], labels = false, class: cls } = Astro.props;
+const on = steps.filter((s) => active.includes(s.n as StepNo)).map((s) => s.short);
+---
+{variant === "hero" ? (
+  <ol class:list={["facets facets--hero", cls]} aria-label="Маршрут лікування">
+    {steps.map((s, i) => (
+      <li class:list={["facets__step", `is-${s.kind}`]} style={`--i:${i}`}>
+        <span class="facets__facet" aria-hidden="true"><span class="facets__num">{s.n}</span></span>
+        <span class="facets__name">{s.short}</span>
+        <span class="facets__tiny" aria-hidden="true">{s.tiny}</span>
+      </li>
+    ))}
+  </ol>
+) : (
+  <div class:list={["facets facets--mini", labels && "facets--labels", cls]}>
+    <span class="facets__row" aria-hidden="true">
+      {steps.map((s, i) => (
+        <span class="facets__cell">
+          <span class:list={["facets__dot", `is-${s.kind}`, active.includes(s.n as StepNo) && "is-on"]} style={`--i:${i}`}></span>
+          {labels && <span class:list={["facets__cap", !active.includes(s.n as StepNo) && "is-off"]}>{s.short}</span>}
+        </span>
+      ))}
+    </span>
+    <span class="visually-hidden">Кроки маршруту: {on.join(", ")}</span>
+  </div>
+)}
+
+<style>
+  .facets { --h: 4rem; --w: 6rem; list-style: none; margin: 0; padding: 0; }
+  .facets__facet, .facets__dot { display: block; clip-path: polygon(0 0, calc(100% - var(--h) * var(--slant)) 0, 100% 100%, calc(var(--h) * var(--slant)) 100%); }
+  .is-med .facets__facet, .facets__dot.is-med { background: var(--color-medicine); }
+  .is-move .facets__facet, .facets__dot.is-move { background: var(--color-accent); }
+
+  /* hero: a descending staircase that keeps the slant of the logo stroke */
+  .facets--hero { display: grid; gap: var(--space-1); }
+  .facets--hero .facets__step { display: flex; align-items: center; gap: var(--space-2); padding-left: calc(var(--i) * (var(--h) + var(--space-1)) * var(--slant)); }
+  .facets--hero .facets__facet { position: relative; flex: none; width: var(--w); height: var(--h); transform-origin: left center; }
+  .facets__num { position: absolute; inset: 0; display: grid; place-items: center; color: var(--color-deep); font: 700 1.5rem/1 var(--font-display); }
+  .facets__name { font: 600 1.125rem/1.2 var(--font-display); color: var(--color-text); }
+  .facets__tiny { display: none; }
+
+  /* effect 1: the facets are laid one after another (transform + opacity only); the text of the hero is never delayed */
+  @media (prefers-reduced-motion: no-preference) {
+    .facets--hero .facets__facet { animation: facet-in 160ms var(--ease-out) both; animation-delay: calc(120ms + var(--i) * 90ms); }
+    .facets--hero .facets__name { animation: label-in 200ms var(--ease-out) both; animation-delay: calc(180ms + var(--i) * 90ms); }
+  }
+  @keyframes facet-in { from { opacity: 0; transform: scaleX(0); } to { opacity: 1; transform: none; } }
+  @keyframes label-in { from { opacity: 0; transform: translateX(-8px); } to { opacity: 1; transform: none; } }
+
+  @media (max-width: 1023px) {
+    .facets--hero { --h: 1.5rem; grid-auto-flow: column; grid-auto-columns: minmax(0, 1fr); gap: var(--space-0); }
+    .facets--hero .facets__step { padding-left: 0; }
+    .facets--hero .facets__facet { width: 100%; animation-delay: calc(var(--i) * 90ms); }
+    .facets__num { font-size: 0.875rem; }
+    .facets--hero .facets__step { display: grid; gap: var(--space-0); }
+    .facets--hero .facets__name { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+    .facets--hero .facets__tiny { display: block; font: 600 0.8125rem/1.2 var(--font-body); color: var(--color-text); }
+    @media (prefers-reduced-motion: no-preference) {
+      .facets--hero .facets__step { animation: none; }
+    }
+  }
+
+  /* mini: four small facets on a problem tile */
+  .facets--mini { --h: 0.75rem; }
+  .facets__row { display: flex; gap: var(--space-0); }
+  .facets__cell { display: grid; gap: var(--space-1); }
+  .facets--labels .facets__row { gap: var(--space-1); }
+  .facets--labels .facets__cell { flex: 1 1 0; min-width: 0; }
+  .facets--labels .facets__dot { --h: 1rem; width: 100%; }
+  .facets__cap { font-size: 0.8125rem; line-height: 1.25; color: var(--color-text); }
+  .facets__cap.is-off { color: var(--color-muted); }
+  .facets--labels .facets__dot.is-on { opacity: 1; }
+  .facets__dot { width: 2rem; height: var(--h); opacity: 1; }
+  .facets__dot:not(.is-on) { background: var(--color-line); }
+
+  /* effect 3: on hover or focus of a problem tile, its facets light up one after another */
+  .facets--mini .facets__dot.is-on { opacity: .55; transition: opacity 200ms var(--ease-out); transition-delay: calc(var(--i) * 60ms); }
+  :global(.tile:hover) .facets__dot.is-on, :global(.tile:focus-within) .facets__dot.is-on { opacity: 1; }
+  @media (hover: none) { .facets--mini .facets__dot.is-on { opacity: 1; } }
+</style>

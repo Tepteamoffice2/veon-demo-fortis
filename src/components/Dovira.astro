@@ -1,0 +1,100 @@
+---
+// «Хто вас веде»: people with facts + the MOH licence. Facts: C-011, C-017…C-021; photos C-023, C-024.
+import { Image } from "astro:assets";
+import Section from "./Section.astro";
+import FutureLink from "./FutureLink.astro";
+import { license, soon } from "../data/site";
+import faleiev from "../assets/team/faleiev.jpg";
+import kalashnykova from "../assets/team/kalashnykova.jpg";
+import laktina from "../assets/team/laktina.jpg";
+import kovalova from "../assets/team/kovalova.jpg";
+import kutepov from "../assets/team/kutepov.jpg";
+import shamarina from "../assets/team/shamarina.jpg";
+
+const people = [
+  { img: faleiev, name: "Фалєєв Іван", role: "Ортопед-травматолог", exp: "15 років досвіду", pos: "50% 22%", group: "doc" },
+  { img: kalashnykova, name: "Калашникова Інна", role: "Невролог, лікар другої категорії", exp: "18 років досвіду", pos: "47% 30%", group: "doc" },
+  { img: laktina, name: "Лактіна Євгенія", role: "Тренер", exp: "15 років досвіду", pos: "50% 30%" },
+  { img: kovalova, name: "Ковальова Наталя", role: "Тренер", exp: "14 років досвіду", pos: "54% 30%" },
+  { img: kutepov, name: "Кутепов Ігор", role: "Тренер", exp: "10 років досвіду", pos: "52% 30%" },
+  { img: shamarina, name: "Шамаріна Марина", role: "Тренер: пілатес для вагітних, м'язи тазового дна", exp: "5 років досвіду", pos: "52% 30%" },
+];
+const groups = [["doc", "Лікарі"], ["coach", "Тренери"]] as const;
+const members = { doc: people.filter((p) => p.group === "doc"), coach: people.filter((p) => p.group !== "doc") };
+const doctors = [
+  { name: "Ринчак Петро", text: "кардіолог-терапевт, к.м.н., лікар вищої категорії, 15 років досвіду" },
+  { name: "Долгарев Олександр", text: "отоларинголог, перша категорія, 25 років досвіду" },
+  { name: "Шмигленко Ольга", text: "терапевт, перша категорія, 14 років досвіду" },
+];
+---
+<Section id="dovira" rec="R-UX-07,R-UX-08" class="team">
+  <div class="container">
+    <div class="team__head">
+      <h2 class="team__title">Хто вас веде</h2>
+      <p class="team__lead">У центрі 27 фахівців — лікарі й тренери.</p>
+    </div>
+    <div class="team__groups" data-rec="R-SP-03,G-R003">
+    {groups.map(([g, label]) => (
+    <div class:list={["team__group", `team__group--${g}`]}>
+    <h3 class="team__group-title">{label}</h3>
+    <ul class="team__grid">
+      {members[g].map((p) => (
+        <li class="person">
+          <span class="person__media"><Image src={p.img} alt={`${p.name}, ${p.role.toLowerCase()}`} widths={[320, 480, 640]} sizes="(min-width: 1200px) 200px, (min-width: 768px) 30vw, 46vw" format="webp" quality={78} loading="lazy" decoding="async" class="person__img" style={`object-position:${p.pos}`} /></span>
+          <p class="person__name">{p.name}</p>
+          <p class="person__role">{p.role}</p>
+          <p class="person__exp">{p.exp}</p>
+        </li>
+      ))}
+    </ul>
+    </div>
+    ))}
+    </div>
+    <div class="team__foot">
+      <div class="team__more">
+        <h3 class="team__h3">Також приймають</h3>
+        <ul class="team__doctors">
+          {doctors.map((d) => <li><strong>{d.name}</strong>, {d.text}</li>)}
+        </ul>
+        <FutureLink note={soon}>Усі фахівці</FutureLink>
+      </div>
+      <p class="team__license">{license}</p>
+    </div>
+  </div>
+</Section>
+
+<style>
+  :global(.team) { padding-block: var(--section-y); }
+  .team__head { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: var(--space-2) var(--space-4); }
+  .team__title { color: var(--color-text); }
+  .team__lead { font-size: var(--fs-lead); }
+  .team__groups { margin-top: var(--space-5); display: grid; grid-template-columns: minmax(0, 2fr) minmax(0, 4fr); gap: var(--space-4) var(--space-5); }
+  .team__group { display: grid; gap: var(--space-2); align-content: start; }
+  .team__group-title { font-size: 1.125rem; padding-bottom: var(--space-1); border-bottom: 1px solid var(--color-line); }
+  .team__grid { list-style: none; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--space-4) var(--space-3); }
+  .team__group--coach .team__grid { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+  .person { display: grid; align-content: start; gap: var(--space-0); }
+  /* one series: a common cool plate shows through the white studio backgrounds (multiply), same 4:5 crop for all */
+  .person__media { display: block; margin-bottom: var(--space-15); background: var(--color-plate); }
+  .person__img { width: 100%; height: auto; aspect-ratio: 4 / 5; object-fit: cover; mix-blend-mode: multiply; }
+  .person__name { font: 600 1.25rem/1.2 var(--font-display); }
+  .person__role, .person__exp { font-size: var(--fs-small); color: var(--color-muted); }
+  .team__foot { margin-top: var(--space-5); padding-top: var(--space-4); border-top: 1px solid var(--color-line); display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); column-gap: var(--space-3); row-gap: var(--space-4); align-items: start; }
+  .team__more { grid-column: 1 / span 7; display: grid; gap: var(--space-2); justify-items: start; }
+  .team__h3 { font-size: var(--fs-h3); }
+  .team__doctors { list-style: none; display: grid; gap: var(--space-1); }
+  .team__doctors strong { font-weight: 600; }
+  .team__more :global(.future-link) { color: var(--color-link); font-weight: 600; }
+  .team__license { grid-column: 9 / span 4; font: 600 var(--fs-h3)/1.25 var(--font-display); color: var(--color-text); }
+
+  @media (max-width: 1199px) {
+    .team__groups { grid-template-columns: minmax(0, 1fr); }
+    .team__grid, .team__group--coach .team__grid { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+  }
+  @media (max-width: 1023px) { .team__more, .team__license { grid-column: 1 / -1; } }
+  @media (max-width: 767px) {
+    .team__groups { margin-top: var(--space-4); }
+    .team__grid, .team__group--coach .team__grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--space-3) var(--space-2); }
+    .person__name { font-size: 1.0625rem; }
+  }
+</style>

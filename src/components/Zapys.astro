@@ -1,0 +1,97 @@
+---
+// «Запис і контакти»: the orange field, the number set as a headline, the short form with an inactive send (demo rule) and the real phone beside it.
+// Facts: contacts, C-010, C-015. Schedule and the second address are reserved for the client's decision (R-UX-04, C-009, C-012) and not shown.
+import Section from "./Section.astro";
+import Icon from "./Icon.astro";
+import { phone, phoneHref, email, emailHref, address, addressEntrance, metro, mapHref, formSoon } from "../data/site";
+const areas = ["Реабілітація", "Медицина", "Масаж", "Фітнес", "Дітям"];
+---
+<Section id="zapys" class="book">
+  <div class="container book__grid">
+    <div class="book__contacts">
+      <h2 class="book__title">Запис і контакти</h2>
+      <a class="book__phone" href={phoneHref}>{phone}</a>
+      <p class="book__hint">Подзвоніть, щоб записатися на прийом або діагностичне заняття.</p>
+      <ul class="book__list">
+        <li><Icon name="mail" /><a href={emailHref}>{email}</a></li>
+        <li><Icon name="pin" /><span>Харків, {address} ({addressEntrance}), {metro}.<br /><a href={mapHref} target="_blank" rel="noopener noreferrer">Прокласти маршрут<span class="visually-hidden"> (Google Maps, нова вкладка)</span></a></span></li>
+      </ul>
+    </div>
+
+    <form class="book__form" aria-labelledby="form-title" data-rec="R-UX-03,G-R002" novalidate>
+      <h3 id="form-title" class="form__title">Залишити заявку</h3>
+      <p class="form__note">Якщо заявку залишено з 8:00 до 18:00, адміністратор зв'яжеться протягом 2 годин; пізніші — до 10:00 наступного дня.</p>
+      <div class="field">
+        <label for="f-name">Ваше ім'я <span aria-hidden="true">*</span></label>
+        <input id="f-name" name="name" type="text" autocomplete="name" required />
+      </div>
+      <div class="field">
+        <label for="f-phone">Телефон <span aria-hidden="true">*</span></label>
+        <input id="f-phone" name="phone" type="tel" inputmode="tel" autocomplete="tel" required />
+      </div>
+      <div class="field">
+        <label for="f-area">Напрямок <span class="field__opt">(необов'язково)</span></label>
+        <select id="f-area" name="area">
+          <option value="">Оберіть напрямок</option>
+          {areas.map((a) => <option value={a}>{a}</option>)}
+        </select>
+      </div>
+      <div class="form__actions">
+        <span class="form__send">
+          <button class="btn" type="button" aria-disabled="true" aria-describedby="form-soon">Записатися</button>
+          <span class="form__tip" id="form-soon" role="note">{formSoon}</span>
+        </span>
+        <p class="form__or">Або одразу: <a href={phoneHref}>{phone}</a></p>
+      </div>
+    </form>
+  </div>
+</Section>
+
+<script>
+  // The demo form never sends and never pretends it did.
+  document.querySelector<HTMLFormElement>(".book__form")?.addEventListener("submit", (e) => e.preventDefault());
+</script>
+
+<style>
+  :global(.book) { padding-block: var(--section-y); background: var(--color-accent); color: var(--color-deep); --ring: var(--color-deep); }
+  .book__grid { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); column-gap: var(--space-3); row-gap: var(--space-5); align-items: start; }
+  .book__contacts { grid-column: 1 / span 7; display: grid; gap: var(--space-3); justify-items: start; }
+  .book__title { color: var(--color-deep); }
+  .book__phone { font: 700 var(--fs-phone)/0.95 var(--font-display); letter-spacing: -0.02em; color: var(--color-deep); text-decoration: none; white-space: nowrap; font-variation-settings: var(--sharp);
+    background: linear-gradient(currentColor, currentColor) left bottom / 0 3px no-repeat; transition: background-size 240ms var(--ease-out); padding-bottom: var(--space-1); }
+  .book__phone:hover { background-size: 100% 3px; }
+  .book__phone:active { transform: translateY(1px); }
+  .book__hint { font-size: var(--fs-lead); max-width: 30ch; }
+  .book__list { list-style: none; display: grid; gap: var(--space-2); }
+  .book__list li { display: flex; gap: var(--space-15); align-items: flex-start; }
+  .book__list :global(svg) { width: 1.375rem; height: 1.375rem; flex: none; margin-top: 0.15em; }
+  .book__list a { color: var(--color-deep); font-weight: 600; text-underline-offset: 0.2em; }
+  .book__list a:hover { text-decoration-thickness: 2px; }
+
+  .book__form { grid-column: 9 / span 4; display: grid; gap: var(--space-2); padding: var(--space-4) var(--space-3); background: var(--color-surface); color: var(--color-text); --ring: var(--color-deep); }
+  .form__title { color: var(--color-text); }
+  .form__note { font-size: var(--fs-small); color: var(--color-muted); }
+  .field { display: grid; gap: var(--space-1); }
+  .field label { font-weight: 600; font-size: var(--fs-small); }
+  .field__opt { font-weight: 400; color: var(--color-muted); }
+  .field input, .field select { width: 100%; min-height: 3rem; padding: 0 var(--space-15); border: 1px solid var(--color-muted); border-radius: var(--radius); background: var(--color-surface); color: var(--color-text); font: 400 1rem/1.4 var(--font-body); }
+  .field input:hover, .field select:hover { border-color: var(--color-text); }
+  .field input:focus-visible, .field select:focus-visible { outline-offset: 0; }
+  .form__actions { display: grid; gap: var(--space-2); margin-top: var(--space-1); }
+  .form__send { position: relative; display: grid; }
+  .form__tip { position: absolute; left: 0; right: 0; bottom: calc(100% + var(--space-1)); padding: var(--space-1) var(--space-15); background: var(--color-deep); color: var(--color-on-deep); font-size: 0.8125rem; line-height: 1.3; border-radius: var(--radius);
+    pointer-events: none; transition: opacity 160ms var(--ease-out); }
+  :global(.js) .form__tip { opacity: 0; }
+  :global(.js) .form__send:hover .form__tip { opacity: 1; transition-delay: 300ms; }
+  :global(.js) .form__send:focus-within .form__tip { opacity: 1; transition-delay: 0ms; }
+  .form__or { font-size: var(--fs-small); }
+  .form__or a { color: var(--color-link); font-weight: 600; white-space: nowrap; }
+
+  @media (max-width: 1023px) {
+    .book__contacts, .book__form { grid-column: 1 / -1; }
+    .book__form { max-width: 32rem; }
+  }
+  @media (max-width: 767px) {
+    .book__form { padding: var(--space-3) var(--space-2); }
+  }
+</style>

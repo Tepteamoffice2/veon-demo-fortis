@@ -1,0 +1,52 @@
+---
+import { getImage } from "astro:assets";
+import Base from "../layouts/Base.astro";
+import Header from "../components/Header.astro";
+import Hero from "../components/Hero.astro";
+import Zvernennia from "../components/Zvernennia.astro";
+import Marshrut from "../components/Marshrut.astro";
+import David from "../components/David.astro";
+import Napriamky from "../components/Napriamky.astro";
+import Dovira from "../components/Dovira.astro";
+import Zapys from "../components/Zapys.astro";
+import Footer from "../components/Footer.astro";
+import MobileBar from "../components/MobileBar.astro";
+import ogSrc from "../assets/brand/og.png";
+import { phone, email, socials } from "../data/site";
+
+// R-SEO-08: title ≤ 60, description ≤ 160, Ukrainian, with the city.
+const title = "Лікування хребта і суглобів у Харкові — центр Fortis";
+const description = "Прийом невролога й ортопеда, діагностика на тренажерах DAVID, кінезітерапія, ЛФК, масаж і фітнес. Просп. Науки, 46, Харків. Запис: 0-800-331303.";
+const og = await getImage({ src: ogSrc, format: "png", width: 1200, height: 630 });
+
+// R-SEO-06: MedicalClinic. No url of the current site, no openingHours (the schedule is not confirmed, C-012).
+const jsonLd = {
+  "@context": "https://schema.org",
+  "@type": "MedicalClinic",
+  name: "Медичний оздоровчий центр Fortis",
+  alternateName: "Fortis Health",
+  telephone: phone,
+  email: email,
+  address: {
+    "@type": "PostalAddress",
+    streetAddress: "просп. Науки, 46",
+    addressLocality: "Харків",
+    addressCountry: "UA",
+  },
+  medicalSpecialty: ["Neurologic", "Musculoskeletal", "PhysicalTherapy"],
+  sameAs: socials.map((s) => s.href),
+};
+---
+<Base lang="uk" title={title} description={description} rec="R-SP-02,R-SP-05" ogImage={og.src}>
+  <script slot="head" type="application/ld+json" data-rec="R-SEO-06" set:html={JSON.stringify(jsonLd)} is:inline />
+  <Header slot="header" />
+  <Hero />
+  <Zvernennia />
+  <Marshrut />
+  <David />
+  <Napriamky />
+  <Dovira />
+  <Zapys />
+  <Footer slot="footer" />
+  <MobileBar slot="footer" />
+</Base>

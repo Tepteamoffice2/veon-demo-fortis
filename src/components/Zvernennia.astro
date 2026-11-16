@@ -1,0 +1,92 @@
+---
+// «З чим до нас звертаються»: the entry by complaint, in the patient's words (R-UX-05). Facts: products_services, C-002, C-003, C-004, C-021.
+import Section from "./Section.astro";
+import Facets from "./Facets.astro";
+import Icon from "./Icon.astro";
+import type { StepNo } from "../data/site";
+
+interface Tile { title: string; text: string; steps: StepNo[]; href: string; link: string; size?: "big" | "wide"; }
+const tiles: Tile[] = [
+  { title: "Болить спина або шия", text: "Лікування болю в спині, остеохондрозу й гриж: прийом лікаря, діагностика на тренажерах DAVID, кінезітерапія, ЛФК, масаж.", steps: [1, 2, 3, 4], href: "#marshrut", link: "Як проходить лікування", size: "big" },
+  { title: "Болять суглоби, артроз", text: "Огляд ортопеда-травматолога, кінезітерапія, ЛФК, кінезіотейпування.", steps: [1, 3], href: "#marshrut", link: "Маршрут лікування" },
+  { title: "Після травми чи операції", text: "Реабілітація після травм і операцій: огляд лікаря, кінезітерапія, ЛФК, апаратна фізіотерапія.", steps: [1, 2, 3], href: "#marshrut", link: "Маршрут лікування" },
+  { title: "Вагітність і після пологів", text: "Окремі програми для вагітних і відновлення після пологів, пілатес для вагітних.", steps: [3, 4], href: "#napriamky", link: "Програми центру" },
+  { title: "Потрібен лікар дитині", text: "Прийом дитячих лікарів, дитячі програми та фітнес.", steps: [1, 4], href: "#napriamky", link: "Напрямок «Дітям»" },
+  { title: "Хочу тренуватися безпечно", text: "Групові й персональні тренування, XBODY, TRX, «Здорова спина» у фітнес-клубі на другому поверсі.", steps: [4], href: "#napriamky", link: "Напрямок «Фітнес»", size: "wide" },
+];
+---
+<Section id="zvernennia" rec="R-UX-05,R-UX-08" class="zv">
+  <div class="container">
+    <div class="zv__head">
+      <h2 class="zv__title">З чим до нас звертаються</h2>
+      <div class="zv__legend">
+        <p class="zv__legend-text">Грані під кожною проблемою — кроки маршруту, які вона потребує:</p>
+        <Facets variant="mini" labels />
+      </div>
+    </div>
+    <ul class="zv__board">
+      {tiles.map((t) => (
+        <li class:list={["tile", t.size && `tile--${t.size}`]}>
+          <h3 class="tile__title">{t.title}</h3>
+          <p class="tile__text">{t.text}</p>
+          <div class="tile__foot">
+            <Facets variant="mini" active={t.steps} labels={t.size === "big"} class={t.size === "big" ? "tile__route" : undefined} />
+            <a class="tile__link" href={t.href}>{t.link}<Icon name="arrow" /></a>
+          </div>
+        </li>
+      ))}
+    </ul>
+  </div>
+</Section>
+
+<style>
+  :global(.zv) { padding-block: var(--section-y) var(--space-6); }
+  .zv__head { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); column-gap: var(--space-3); row-gap: var(--space-3); align-items: end; }
+  .zv__title { grid-column: 1 / span 6; color: var(--color-text); max-width: 18ch; }
+  .zv__legend { grid-column: 8 / span 5; display: grid; gap: var(--space-15); }
+  .zv__legend-text { font-size: var(--fs-small); color: var(--color-muted); }
+  .tile--big .tile__foot { justify-items: stretch; gap: var(--space-3); }
+  .tile--big .tile__foot .tile__link { justify-self: start; }
+  .tile--big :global(.tile__route) { max-width: 28rem; }
+  .tile--big :global(.tile__route .facets__dot) { --h: 2.5rem; }
+  .tile--big :global(.tile__route .facets__cap) { font: 600 0.9375rem/1.25 var(--font-display); }
+  .zv__board { list-style: none; margin-top: var(--space-5); display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: 1px; background: var(--color-line); border-block: 1px solid var(--color-line); }
+  .tile { position: relative; grid-column: span 3; display: flex; flex-direction: column; gap: var(--space-2); padding: var(--space-4) var(--space-3) var(--space-3); background: var(--color-bg); transition: background-color 200ms var(--ease-out); }
+  .tile--big { grid-column: span 6; grid-row: span 2; padding-right: var(--space-5); }
+  .tile--big .tile__title { font-size: var(--fs-h2); line-height: var(--lh-h2); font-variation-settings: var(--sharp); max-width: 10ch; }
+  .tile--big .tile__text { font-size: var(--fs-lead); max-width: 30ch; }
+  .tile--wide { grid-column: 1 / -1; display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); column-gap: var(--space-3); align-items: center; }
+  .tile--wide .tile__title { grid-column: 1 / span 4; }
+  .tile--wide .tile__text { grid-column: 5 / span 5; }
+  .tile--wide .tile__foot { grid-column: 10 / span 3; margin-top: 0; }
+  .tile__title { color: var(--color-text); }
+  .tile__text { color: var(--color-text); }
+  .tile__foot { margin-top: auto; display: grid; gap: var(--space-2); justify-items: start; padding-top: var(--space-1); }
+  .tile__link { display: inline-flex; align-items: center; gap: var(--space-1); color: var(--color-link); font-weight: 600; text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 0.25em; }
+  .tile__link::after { content: ""; position: absolute; inset: 0; }
+  .tile__link :global(svg) { width: 1.25rem; height: 1.25rem; flex: none; transition: transform 200ms var(--ease-out); }
+  .tile:hover { background: var(--color-surface); }
+  .tile:hover .tile__link { color: var(--color-text); }
+  .tile:hover .tile__link :global(svg), .tile:focus-within .tile__link :global(svg) { transform: translateX(4px); }
+  .tile__link:active { color: var(--color-deep); }
+
+  @media (max-width: 1023px) {
+    .tile, .tile--big { grid-column: span 6; grid-row: auto; padding-inline: var(--space-3); }
+    .tile:first-child { padding-left: var(--space-3); }
+    .zv__title, .zv__legend { grid-column: 1 / -1; }
+    .tile--big { grid-column: 1 / -1; }
+    .tile--wide { display: flex; align-items: stretch; padding-left: var(--space-3); }
+  }
+  @media (max-width: 767px) {
+    :global(.zv) { padding-block: var(--section-y); }
+    .zv__title, .zv__legend { grid-column: 1 / -1; max-width: none; }
+    .zv__board { margin-top: var(--space-4); grid-template-columns: minmax(0, 1fr); background: var(--color-line); }
+    .tile, .tile--big, .tile--wide { grid-column: 1 / -1; padding: var(--space-3) 0; }
+    .tile:first-child { padding-left: 0; }
+    .tile--big .tile__title { font-size: var(--fs-h3); line-height: var(--lh-h3); max-width: none; }
+    .tile--big .tile__text { font-size: var(--fs-body); }
+    .tile--big :global(.tile__route .facets__dot) { --h: 1.25rem; }
+    .tile--big :global(.tile__route .facets__cap) { font: 600 0.8125rem/1.25 var(--font-body); overflow-wrap: anywhere; }
+    .tile:hover { background: var(--color-bg); }
+  }
+</style>

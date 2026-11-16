@@ -1,0 +1,41 @@
+---
+// DAVID Back Concept: a light typographic spread (no photo of the machines exists). Facts: C-001, C-022. No «аналогів немає».
+import Section from "./Section.astro";
+import FutureLink from "./FutureLink.astro";
+import { soon } from "../data/site";
+---
+<Section id="david" class="david">
+  <div class="container david__grid">
+    <div class="david__title"><h2 class="david__word">DAVID</h2><p class="david__sub">Back Concept</p><p class="david__fact">Діагностичне заняття: 85&nbsp;хв — 1100&nbsp;грн</p></div>
+    <div class="david__body">
+      <p class="david__lead">Для діагностики та лікування хребта центр працює на тренажерах DAVID (David Back Concept).</p>
+      <h3 class="david__h3">Що входить у діагностичне заняття</h3>
+      <ul class="david__list">
+        <li>Консультація ортопеда-травматолога або невролога</li>
+        <li>Тестове заняття на тренажерах</li>
+      </ul>
+      <FutureLink note={soon}>Детальніше про методику</FutureLink>
+    </div>
+  </div>
+</Section>
+
+<style>
+  :global(.david) { padding-block: var(--section-y) var(--space-6); }
+  @media (max-width: 767px) { :global(.david) { padding-block: var(--section-y); } }
+  .david__grid { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); column-gap: var(--space-3); row-gap: var(--space-4); align-items: start; }
+  .david__title { grid-column: 1 / span 7; display: grid; color: var(--color-text); }
+  .david__word { font-size: var(--fs-david); line-height: 0.82; font-weight: 800; letter-spacing: -0.03em; font-variation-settings: "SHRP" 100; }
+  .david__sub { margin-top: var(--space-2); font: 600 var(--fs-h2)/var(--lh-h2) var(--font-display); font-variation-settings: var(--sharp); }
+  .david__fact { margin-top: var(--space-5); padding-top: var(--space-3); border-top: 2px solid var(--color-text); font: 600 clamp(1.75rem, 1.2rem + 2vw, 3rem)/1.1 var(--font-display); color: var(--color-text); max-width: 14em; }
+  .david__body { grid-column: 9 / span 4; display: grid; gap: var(--space-3); justify-items: start; padding-top: var(--space-2); }
+  .david__lead { font-size: var(--fs-lead); line-height: 1.45; }
+  .david__h3 { font-size: var(--fs-h3); }
+  .david__list { list-style: none; display: grid; border-top: 1px solid var(--color-line); width: 100%; }
+  .david__list li { padding-block: var(--space-15); border-bottom: 1px solid var(--color-line); }
+  .david :global(.future-link) { color: var(--color-link); font-weight: 600; }
+
+  @media (max-width: 1023px) {
+    .david__title, .david__body { grid-column: 1 / -1; }
+    .david__body { max-width: 40rem; }
+  }
+</style>

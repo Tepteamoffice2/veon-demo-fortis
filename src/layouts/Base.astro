@@ -1,0 +1,41 @@
+---
+import "@fontsource-variable/geologica/shrp.css";
+import "@fontsource-variable/onest/wght.css";
+import "../styles/tokens.css";
+import "../styles/global.css";
+import geologicaCyr from "@fontsource-variable/geologica/files/geologica-cyrillic-shrp-normal.woff2?url";
+
+interface Props { lang: string; title: string; description: string; canonical?: string; rec?: string; ogImage?: string; }
+const { lang, title, description, canonical, rec, ogImage } = Astro.props;
+---
+<!doctype html>
+<html lang={lang}>
+  <head>
+    <meta charset="utf-8" />
+    <script is:inline>document.documentElement.classList.add("js")</script>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title}</title>
+    <meta name="description" content={description} data-rec="R-SEO-08" />
+    {canonical && <link rel="canonical" href={canonical} />}
+    <meta property="og:title" content={title} data-rec="R-SEO-09" />
+    <meta property="og:description" content={description} />
+    <meta property="og:locale" content="uk_UA" />
+    <meta property="og:type" content="website" />
+    {ogImage && <meta property="og:image" content={ogImage} />}
+    {ogImage && <meta property="og:image:width" content="1200" />}
+    {ogImage && <meta property="og:image:height" content="630" />}
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="robots" content="noindex" />
+    <link rel="icon" href="favicon.svg" type="image/svg+xml" />
+    <link rel="preload" href={geologicaCyr} as="font" type="font/woff2" crossorigin />
+    <slot name="head" />
+    <style is:global>html, body { overflow-x: clip; }</style>
+  </head>
+  <body data-rec={rec}>
+    <a class="skip-link" href="#main">{lang.startsWith("uk") ? "До змісту" : lang.startsWith("ru") ? "К содержанию" : "Skip to content"}</a>
+    <slot name="header" />
+    <main id="main"><slot /></main>
+    <slot name="footer" />
+    <script src="../scripts/reveal.ts"></script>
+  </body>
+</html>

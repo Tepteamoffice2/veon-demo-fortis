@@ -1,0 +1,90 @@
+---
+// «П'ять напрямків в одному центрі»: a board of five columns (desktop), accordions on phones. Facts: business_lines, products_services, C-002…C-004, C-017.
+import Section from "./Section.astro";
+import FutureLink from "./FutureLink.astro";
+import { soon } from "../data/site";
+
+const areas = [
+  { title: "Реабілітація", items: ["Лікування болю в спині й суглобах, артрозу, остеохондрозу, гриж", "Програма на тренажерах DAVID", "Кінезітерапія, ЛФК, профілактор Євмінова", "Кінезіотейпування", "Реабілітація після травм і операцій", "Програми для вагітних і після пологів"], more: "Про реабілітацію" },
+  { title: "Медицина", items: ["Прийом невролога й ортопеда-травматолога", "Терапевт, кардіолог-терапевт, отоларинголог", "Консультації дієтолога", "Апаратна фізіотерапія", "Прийом дитячих лікарів"], more: "Про медицину" },
+  { title: "Масаж", items: ["Лікувальний масаж, різні види", "Масаж у програмі лікування"], more: "Види масажу" },
+  { title: "Фітнес", items: ["Групові заняття: йога, пілатес, стретчинг, ZUMBA, Тай-бо, Port de bras, функціональний тренінг, Tabata", "Персональні тренування", "XBODY, TRX, «Здорова спина»", "Тренажерний зал"], more: "Розклад", fit: true },
+  { title: "Дітям", items: ["Прийом дитячих лікарів", "Дитячі програми", "Дитячий фітнес"], more: "Програми для дітей" },
+];
+---
+<Section id="napriamky" rec="R-UX-08,R-UX-09,R-UX-11" class="areas">
+  <div class="container">
+    <div class="areas__head">
+      <h2 class="areas__title">П'ять напрямків в одному центрі</h2>
+      <p class="areas__prices"><FutureLink note={soon} class="future-link--end">Ціни на всі послуги</FutureLink></p>
+    </div>
+    <div class="areas__board">
+      {areas.map((a) => (
+        <details class:list={["area", a.fit && "area--fit"]} open>
+          <summary class="area__summary"><h3 class="area__title">{a.title}</h3><span class="area__toggle" aria-hidden="true"></span></summary>
+          <div class="area__body">
+            <ul class="area__list">{a.items.map((it) => <li>{it}</li>)}</ul>
+            <FutureLink note={soon}>{a.more}</FutureLink>
+          </div>
+        </details>
+      ))}
+    </div>
+  </div>
+</Section>
+
+<script>
+  // Phones: the directions fold into accordions (closed by default); desktop: a board where every column stays open.
+  const mq = matchMedia("(max-width: 767px)");
+  const items = [...document.querySelectorAll<HTMLDetailsElement>(".area")];
+  const apply = () => items.forEach((d) => { d.open = !mq.matches; });
+  apply();
+  mq.addEventListener("change", apply);
+  items.forEach((d) => {
+    d.querySelector("summary")?.addEventListener("click", (e) => { if (!mq.matches) e.preventDefault(); });
+  });
+</script>
+
+<style>
+  :global(.areas) { padding-block: var(--section-y); }
+  .areas__title { color: var(--color-text); max-width: 16ch; }
+  .areas__board { margin-top: var(--space-5); display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); border-top: 2px solid var(--color-text); }
+  .area { padding: var(--space-3) var(--space-3) var(--space-4); border-left: 1px solid var(--color-line); }
+  .area:first-child { border-left: 0; padding-left: 0; }
+  .area--fit { background: var(--color-accent); color: var(--color-deep); border-left-color: var(--color-accent); --ring: var(--color-deep); }
+  .area--fit + .area { border-left-color: var(--color-accent); }
+  .area__summary { list-style: none; display: flex; align-items: center; justify-content: space-between; gap: var(--space-2); }
+  .area__summary::-webkit-details-marker { display: none; }
+  .area__title { font-size: var(--fs-h3); }
+  .area__toggle { display: none; }
+  .area__body { display: grid; gap: var(--space-3); justify-items: start; margin-top: var(--space-3); }
+  .area__list { list-style: none; display: grid; gap: var(--space-15); }
+  .area__list li { padding-left: var(--space-2); position: relative; }
+  .area__list li::before { content: ""; position: absolute; left: 0; top: 0.6em; width: 0.5rem; height: 0.25rem; background: currentColor; clip-path: polygon(0 0, 70% 0, 100% 100%, 30% 100%); }
+  .area :global(.future-link) { font-weight: 600; color: var(--color-link); }
+  .area--fit :global(.future-link) { color: var(--color-deep); }
+  .areas__head { display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: var(--space-2) var(--space-4); }
+  .areas__prices :global(.future-link) { font-weight: 600; color: var(--color-link); }
+  @media (min-width: 768px) { .area__summary { cursor: default; } }
+
+  @media (max-width: 1199px) and (min-width: 768px) {
+    .areas__board { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+    .area:nth-child(4) { border-left: 0; }
+    .area:nth-child(4) { padding-left: var(--space-3); }
+  }
+  @media (max-width: 767px) {
+    .areas__board { grid-template-columns: minmax(0, 1fr); margin-top: var(--space-4); }
+    .area { border-left: 0; border-bottom: 1px solid var(--color-line); padding: 0; }
+    .area--fit { padding-inline: var(--space-2); }
+    .area__summary { min-height: 3.5rem; cursor: pointer; padding-block: var(--space-15); }
+    .area__toggle { display: block; position: relative; width: 1rem; height: 1rem; }
+    .area__toggle::before, .area__toggle::after { content: ""; position: absolute; left: 0; top: calc(50% - 1px); width: 1rem; height: 2px; background: currentColor; transition: transform 220ms var(--ease-out); }
+    .area__toggle::after { transform: rotate(90deg); }
+    .area[open] .area__toggle::after { transform: rotate(0deg); }
+    .area__body { margin-top: 0; padding-bottom: var(--space-3); }
+    /* effect 4: the content of an opened direction settles in (transform + opacity) */
+    @media (prefers-reduced-motion: no-preference) {
+      .area[open] .area__body { animation: area-in 220ms var(--ease-out) both; }
+    }
+  }
+  @keyframes area-in { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+</style>

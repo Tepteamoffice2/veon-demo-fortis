@@ -1,0 +1,72 @@
+---
+// «Як проходить лікування»: the route unfolded into four facet columns on the dark band. Facts: products_services, C-001, C-002, C-003, C-022.
+import Section from "./Section.astro";
+import FutureLink from "./FutureLink.astro";
+import Icon from "./Icon.astro";
+import { phone, phoneHref, soon } from "../data/site";
+
+const steps = [
+  { n: 1, kind: "med", title: "Прийом лікаря", text: "Невролог, ортопед-травматолог та інші лікарі центру.", price: "Первинна консультація ортопеда-травматолога — 700 грн" },
+  { n: 2, kind: "med", title: "Діагностика на DAVID", text: "Діагностичне заняття: консультація ортопеда-травматолога або невролога і тестове заняття на тренажерах.", price: "85 хв — 1100 грн" },
+  { n: 3, kind: "move", title: "Програма", text: "Кінезітерапія, ЛФК, профілактор Євмінова, кінезіотейпування, апаратна фізіотерапія, лікувальний масаж." },
+  { n: 4, kind: "move", title: "Фітнес-клуб", text: "Групові й персональні тренування, XBODY, TRX. Фітнес-клуб — на другому поверсі." },
+];
+---
+<Section id="marshrut" rec="R-UX-05,R-UX-11,G-R002,G-R003" class="route on-deep">
+  <div class="container">
+    <div class="route__head">
+      <h2 class="route__title">Як проходить лікування</h2>
+      <p class="route__lead">Спершу лікар і діагностика, потім рух. Усе — в одному центрі.</p>
+    </div>
+    <ol class="route__steps">
+      {steps.map((s, i) => (
+        <li class:list={["step", `is-${s.kind}`]} data-reveal style={`--reveal-delay:${i * 120}ms`}>
+          <span class="step__facet" aria-hidden="true"><span>{s.n}</span></span>
+          <h3 class="step__title">{s.title}</h3>
+          <p class="step__text">{s.text}</p>
+          {s.price && <p class="step__price">{s.price}</p>}
+        </li>
+      ))}
+    </ol>
+    <div class="route__foot">
+      <a class="btn" href={phoneHref}><Icon name="phone" />Подзвонити {phone}</a>
+      <p class="route__note">Ціни — з сайту центру; актуальні уточнюйте за телефоном. <FutureLink note={soon}>Усі ціни</FutureLink></p>
+    </div>
+  </div>
+</Section>
+
+<style>
+  :global(.route) { padding-block: var(--section-y); background: var(--color-deep); color: var(--color-on-deep); }
+  .route__head { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); column-gap: var(--space-3); align-items: end; }
+  .route__title { grid-column: 1 / span 7; }
+  .route__lead { grid-column: 8 / span 5; font-size: var(--fs-lead); color: var(--color-on-deep-muted); }
+  .route__steps { list-style: none; margin-top: var(--space-5); display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: var(--space-3); }
+  .step { --h: 4.5rem; display: flex; flex-direction: column; gap: var(--space-15); }
+  .step__facet { display: flex; align-items: center; height: var(--h); margin-bottom: var(--space-2); padding-left: var(--space-3);
+    clip-path: polygon(0 0, calc(100% - var(--h) * var(--slant)) 0, 100% 100%, calc(var(--h) * var(--slant)) 100%); }
+  .step__facet span { padding-left: calc(var(--h) * var(--slant) * 0.5); font: 700 2rem/1 var(--font-display); color: var(--color-deep); }
+  .is-med .step__facet { background: var(--color-medicine); }
+  .is-move .step__facet { background: var(--color-accent); }
+  .step__title { color: var(--color-on-deep); }
+  .step__text { color: var(--color-on-deep-muted); }
+  .step__price { margin-top: auto; padding-top: var(--space-2); border-top: 1px solid var(--color-deep-2); font: 600 var(--fs-body)/1.35 var(--font-display); color: var(--color-medicine); }
+  .route__foot { margin-top: var(--space-5); display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-3) var(--space-4); }
+  .route__note { font-size: var(--fs-small); color: var(--color-on-deep-muted); }
+  .route__note :global(.future-link) { margin-left: var(--space-1); color: var(--color-on-deep); }
+
+  @media (max-width: 1023px) {
+    .route__title, .route__lead { grid-column: 1 / -1; }
+    .route__lead { margin-top: var(--space-2); }
+    .route__steps { grid-template-columns: repeat(2, minmax(0, 1fr)); row-gap: var(--space-5); }
+  }
+  @media (max-width: 767px) {
+    .route__steps { grid-template-columns: minmax(0, 1fr); gap: var(--space-4); margin-top: var(--space-4); }
+    /* on phones the slant becomes a cut of the top edge */
+    .step { --h: 3rem; padding-left: var(--space-2); border-left: 2px solid var(--color-deep-2); }
+    .is-med { border-left-color: var(--color-medicine); }
+    .is-move { border-left-color: var(--color-accent); }
+    .step__facet { width: 5.5rem; margin-bottom: 0; }
+    .step__facet span { font-size: 1.5rem; }
+    .route__foot .btn { width: 100%; }
+  }
+</style>

@@ -1,0 +1,44 @@
+---
+// Phones only: a bottom bar «Подзвонити / Записатися». Slides in after the first screen, slides away at #zapys (effect 5).
+// Without scripts it simply stays in place.
+import Icon from "./Icon.astro";
+import { phoneHref } from "../data/site";
+---
+<div class="mbar" data-rec="R-UX-02,S-R008,G-R001">
+  <a class="btn mbar__call" href={phoneHref}><Icon name="phone" />Подзвонити</a>
+  <a class="btn btn--dark mbar__book" href="#zapys">Записатися</a>
+</div>
+
+<script>
+  const bar = document.querySelector<HTMLElement>(".mbar");
+  const hero = document.getElementById("top");
+  const book = document.getElementById("zapys");
+  if (bar && hero && book && "IntersectionObserver" in window) {
+    let pastHero = false, atBook = false;
+    const update = () => {
+      const show = pastHero && !atBook;
+      bar.classList.toggle("is-shown", show);
+      bar.toggleAttribute("inert", !show);
+    };
+    new IntersectionObserver(([e]) => { pastHero = !e.isIntersecting; update(); }).observe(hero);
+    new IntersectionObserver(([e]) => { atBook = e.isIntersecting; update(); }, { threshold: 0.15 }).observe(book);
+  } else if (bar) {
+    bar.classList.add("is-shown");
+  }
+</script>
+
+<style>
+  .mbar { display: none; }
+  @media (max-width: 767px) {
+    .mbar { position: fixed; left: 0; right: 0; bottom: 0; z-index: 35; display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: var(--space-1);
+      padding: var(--space-1) var(--gutter) calc(var(--space-1) + env(safe-area-inset-bottom)); background: var(--color-bg); border-top: 1px solid var(--color-line);
+      transition: transform 240ms var(--ease-out); }
+    :global(.js) .mbar:not(.is-shown) { transform: translateY(110%); }
+    .mbar .btn { min-height: 3.5rem; padding-inline: var(--space-2); }
+    .mbar__call { --cut: 0.75rem; }
+  }
+  @media (max-width: 767px) and (prefers-reduced-motion: reduce) {
+    .mbar { transition: none; }
+    :global(.js) .mbar:not(.is-shown) { transform: none; visibility: hidden; }
+  }
+</style>
